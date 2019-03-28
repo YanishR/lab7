@@ -237,8 +237,12 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
   if(imm_p != -1){
     if(isNumberString(operand[imm_p])){  // does it have a numeric immediate field?
       imm = cvtNumString2Number(operand[imm_p]);
-      if(((imm & 0xFFFF0000)<<1))  // too big a number to fit
+      if(imm > 0 && ((imm & 0xFFFF0000)<<1)){  // too big a number to fit
 	return false;
+      }
+      else if(imm < 0 && ((imm ^ 0xFFFF0000) >> 16)){
+	return false;
+      }
     }
     else{ 
       if(opcodes.isIMMLabel(o)){  // Can the operand be a label?

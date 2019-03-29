@@ -1,2 +1,3 @@
-# lab7
-Files for lab7 of cs301
+Names:
+Sophie Borchart,
+Yanish Rambocus

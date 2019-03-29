@@ -24,13 +24,26 @@ void DependencyChecker::addInstruction(Instruction i)
 
   switch(iType){
   case RTYPE:
-    // Your code here
+    // Check that each register is not UNDEFINED
+    // Pass in RD for a Write dependence
+    // and RT and RS for a Read dependence
+    if (i.getRD() != 32)
+        checkForWriteDependence(i.getRD());
+    if (i.getRT() != 32)
+        checkForReadDependence(i.getRT());
+    if (i.getRS() != 32)
+        checkForReadDependence(i.getRS());
     break;
   case ITYPE:
-    // Your code here
+    // Chec that each register is not UNDEFINED
+    // Pass in RT for a Write dependence
+    // and RS for a Read dependence
+    if (i.getRT() != 32)
+        checkForWriteDependence(i.getRT());
+    if (i.getRS() != 32)
+        checkForReadDependence(i.getRS());
     break;
   case JTYPE:
-    // Your code here
     break;
   default:
     // do nothing
@@ -47,11 +60,21 @@ void DependencyChecker::checkForReadDependence(unsigned int reg)
    * the appropriate RegisterInfo entry regardless of dependence detection.
    */
 {
-  
-  // Your code here
+    if ( myCurrentState[reg].accessType ==  WRITE)
+    {
+        Dependence newDependence;
 
+        newDependence.dependenceType = RAW;
+        newDependence.registerNumber = reg;
+        newDependence.previousInstructionNumber = myCurrentState[reg].lastInstructionToAccess;
+        newDependence.currentInstructionNumber = (int) myInstructions.size();
+
+        myDependences.push_back(newDependence);
+    }
+
+    myCurrentState[reg].accessType = READ;
+    myCurrentState[reg].lastInstructionToAccess = (int) myInstructions.size();
 }
-
 
 void DependencyChecker::checkForWriteDependence(unsigned int reg)
   /* Determines if a write data dependence occurs when reg is written by the current
@@ -59,9 +82,24 @@ void DependencyChecker::checkForWriteDependence(unsigned int reg)
    * the appropriate RegisterInfo entry regardless of dependence detection.
    */
 {
-  
-  // Your code here
+   if (myCurrentState[reg].accessType != A_UNDEFINED) 
+   {
+        Dependence newDependence;
 
+        if (myCurrentState[reg].accessType == READ)
+            newDependence.dependenceType = WAR;
+        else if (myCurrentState[reg].accessType == WRITE)
+            newDependence.dependenceType = WAW;
+
+        newDependence.registerNumber = reg;
+        newDependence.previousInstructionNumber = myCurrentState[reg].lastInstructionToAccess;
+        newDependence.currentInstructionNumber = (int) myInstructions.size();
+
+        myDependences.push_back(newDependence);
+   }
+   
+   myCurrentState[reg].accessType = WRITE;
+   myCurrentState[reg].lastInstructionToAccess = (int) myInstructions.size();
 }
 
 

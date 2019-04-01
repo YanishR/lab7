@@ -35,9 +35,9 @@ void DependencyChecker::addInstruction(Instruction i)
         checkForReadDependence(i.getRS());
     break;
   case ITYPE:
-    // Chec that each register is not UNDEFINED
-    // Pass in RT for a Write dependence
-    // and RS for a Read dependence
+    // Checks that each register is not UNDEFINED
+    // Passes in RT for a Write dependence
+    // Passes in RS for a Read dependence
     if (i.getRT() != 32)
         checkForWriteDependence(i.getRT());
     if (i.getRS() != 32)
@@ -56,11 +56,11 @@ void DependencyChecker::addInstruction(Instruction i)
 
 void DependencyChecker::checkForReadDependence(unsigned int reg)
   /* Determines if a read data dependence occurs when reg is read by the current
-   * instruction.  If so, adds an entry to the list of dependences. Also updates
+   * instruction. If so, adds an entry to the list of dependences. It also updates
    * the appropriate RegisterInfo entry regardless of dependence detection.
    */
 {
-    if ( myCurrentState[reg].accessType ==  WRITE)
+    if (myCurrentState[reg].accessType ==  WRITE)
     {
         Dependence newDependence;
 
@@ -108,20 +108,20 @@ void DependencyChecker::printDependences()
    * dependencies.
    */ 
 {
-  // First, print all instructions
-  list<Instruction>::iterator liter;
+  // Firsts, print all  of the instructions
+  list<Instruction>::iterator l_iter;
   int i = 0;
   cout << "INSTRUCTIONS:" << endl;
-  for(liter = myInstructions.begin(); liter != myInstructions.end(); liter++){
-    cout << i << ": " << (*liter).getAssembly() << endl;
+  for(l_iter = myInstructions.begin(); l_iter != myInstructions.end(); l_iter++){
+    cout << i << ": " << (*l_iter).getAssembly() << endl;
     i++;
   }
 
   // Second, print all dependences
-  list<Dependence>::iterator diter;
+  list<Dependence>::iterator d_iter;
   cout << "DEPENDENCES: \nType Register (FirstInstr#, SecondInstr#) " << endl;
-  for(diter = myDependences.begin(); diter != myDependences.end(); diter++){
-    switch( (*diter).dependenceType){
+  for(d_iter = myDependences.begin(); d_iter != myDependences.end(); d_iter++){
+    switch( (*d_iter).dependenceType){
     case RAW:
       cout << "RAW \t";
       break;
@@ -135,10 +135,8 @@ void DependencyChecker::printDependences()
       break;
     }
 
-    cout << "$" << (*diter).registerNumber << " \t";
-    cout << "(" << (*diter).previousInstructionNumber << ", ";
-    cout << (*diter).currentInstructionNumber << ")" << endl;
+    cout << "$" << (*d_iter).registerNumber << " \t";
+    cout << "(" << (*d_iter).previousInstructionNumber << ", ";
+    cout << (*d_iter).currentInstructionNumber << ")" << endl;
   }
-
-
 }

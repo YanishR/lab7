@@ -1,0 +1,20 @@
+INSTRUCTIONS:
+0: j label
+1: lw $4, 0($1)
+2: add $3, $4, $8
+3: addi $1, $2, 100
+4: mult $2, $3
+5: mfhi $1
+6: sra $3, $2, 10
+7: slti $1, $3, 1023
+8: lw $1, 100($3)
+DEPENDENCES: 
+Type Register (FirstInstr#, SecondInstr#) 
+RAW 	$4 	(1, 2)
+WAR 	$1 	(1, 3)
+RAW 	$3 	(2, 4)
+WAW 	$1 	(3, 5)
+WAR 	$3 	(4, 6)
+RAW 	$3 	(6, 7)
+WAW 	$1 	(5, 7)
+WAW 	$1 	(7, 8)

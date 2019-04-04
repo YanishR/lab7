@@ -38,10 +38,10 @@ void DependencyChecker::addInstruction(Instruction i)
     // Checks that each register is not UNDEFINED
     // Passes in RT for a Write dependence
     // Passes in RS for a Read dependence
-    if (i.getRT() != 32)
-        checkForWriteDependence(i.getRT());
     if (i.getRS() != 32)
         checkForReadDependence(i.getRS());
+    if (i.getRT() != 32)
+        checkForWriteDependence(i.getRT());
     break;
   case JTYPE:
     break;
